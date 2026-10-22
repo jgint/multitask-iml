@@ -34,6 +34,7 @@ if __name__ == "__main__":
     clean = pd.concat(
         [
             grouped[["text", "platform"]].first(),
+            # Some scores are exactly -1.0, the library's default mask_value: set ModelConfig(mask_value=...) to e.g. -999
             grouped["hate_speech_score"].mean(),
             grouped[ORDINAL_COLS].mean(),
             # Target identity groups: majority vote across annotators
