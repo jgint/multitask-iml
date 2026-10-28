@@ -1,5 +1,5 @@
 """
-Keep the Measuring Hate Speech annotations at one row per (comment, annotator) and add a comment-level split.
+Keep the Measuring Hate Speech annotations at one row per (comment, annotator) and split by comment into train/val/test files.
 Neither paper aggregates: their multitask model predicts each annotator's item ratings given their severity.
 """
 from pathlib import Path
@@ -54,4 +54,5 @@ if __name__ == "__main__":
     df["weight"] = 1 / df["n_annotations"]
 
     # Some scores are exactly -1.0, the library's default mask_value: set ModelConfig(mask_value=...) to e.g. -999
-    df.to_csv(OUT_DIR / "hatespeech_dlab.csv", index=False)
+    for name, part in df.groupby("split"):
+        part.drop(columns="split").to_csv(OUT_DIR / f"hatespeech_{name}.csv", index=False)
